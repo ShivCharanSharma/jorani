@@ -10,6 +10,7 @@
 if (!defined('BASEPATH')) { exit('No direct script access allowed'); }
 
 //VObject is used to build an ICS feed (webcal, ical feed)
+require_once FCPATH . "vendor/autoload.php";
 use Sabre\VObject;
 
 /**

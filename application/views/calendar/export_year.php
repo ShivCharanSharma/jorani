@@ -8,6 +8,8 @@
  * @since         0.4.3
  */
 
+require_once FCPATH . "vendor/autoload.php";
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;

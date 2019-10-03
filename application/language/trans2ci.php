@@ -8,7 +8,7 @@
  */
 
 require_once "../../vendor/autoload.php";
-$target = "slovak";
+$target = "romanian";
 
 $copyright = "<?php
 /**
@@ -16,23 +16,21 @@ $copyright = "<?php
  * @copyright  Copyright (c) 2014-2019 Benjamin BALET
  * @license    http://opensource.org/licenses/AGPL-3.0 AGPL-3.0
  * @link       https://github.com/bbalet/jorani
- * @since      1.0.0
+ * @since      0.6.6
  * @author     Transifex users
  */\n\n";
 
 //Load and parse the PO file
-$path = $target . DIRECTORY_SEPARATOR . $target . '.po';
-echo "[INFO] Language file $path" . PHP_EOL;
-$catalog = Sepia\PoParser\Parser::parseFile($path);
-$entries = $catalog->getEntries();
+$fileHandler = new Sepia\FileHandler($target . DIRECTORY_SEPARATOR . $target . '.po');
+$poParser = new Sepia\PoParser($fileHandler);
+$entries  = $poParser->parse();
+//$lenPO = count($messages[1]);
 $lenPO = count($entries);
-echo "[INFO] The PO file contains $lenPO entries" . PHP_EOL;
 
 //Scan all translation files
 $files = scandir($target);
 foreach ($files as $file) {
     if (strpos($file, 'php') !== false) {
-        echo "[INFO] Scanning resource: $file" . PHP_EOL;
         $path = join_paths($target, $file);
         $ci18n = file_get_contents($path);
 
@@ -50,15 +48,14 @@ foreach ($files as $file) {
               //$translated = $entries[$msgid]['msgstr']
 
                 //Handle multi line Msg Id
-                $msgId = $entry->getMsgId();
-                $msgStr = $entry->getMsgStr();
-                $key = str_replace("'", "\\'", $msgId);
+                $key = implode("", $entry['msgid']);
+                $key = str_replace("'", "\\'", $key);
 
                 //Replace the english entry by the translation, if any
                 if ($out[2][$jj] != '') {
                     if (strcmp($key, $out[2][$jj]) == 0) {
-                        $po2ci = str_replace("'", '\'', $msgStr);
-                        if ($msgStr != '') {
+                        $po2ci = str_replace("'", '\'', $entry['msgstr'][0]);
+                        if ($entry['msgstr'][0] != '') {
                             $out[2][$jj] = $po2ci;
                         }
                     }
@@ -75,13 +72,7 @@ foreach ($files as $file) {
     }
 }
 
-echo "[INFO] Done." . PHP_EOL;
-
-/**
- * Internal utility function to join paths
- *
- * @return string normalized path
- */
+//Internal utility function to join paths
 function join_paths() {
     $paths = array();
     foreach (func_get_args() as $arg) {
