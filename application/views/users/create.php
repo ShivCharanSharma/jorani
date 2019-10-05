@@ -571,7 +571,7 @@ $('#managerS').append($('<option>',{value:val['id'],selected:"selected",disabled
         //Popup select manager
         $("#cmdSelectManager").click(function() {
             $("#frmSelectManager").modal('show');
-            $("#frmSelectManagerBody").load('<?php echo base_url(); ?>users/employees');
+            $("#frmSelectManagerBody").load('<?php echo base_url(); ?>users/MultiLevelManager');
         });
 
         //Popup select position
